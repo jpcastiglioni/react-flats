@@ -3,15 +3,22 @@ import React, { Component } from 'react';
 
 import FlatList from './flat_list.jsx';
 import Flats from '../../data/flats.js';
+import SimpleMap from './map.jsx';
 
 import Flat from './flat.jsx';
 
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = { flats: [] };
+    this.state = { flats: [],
+                   mapCenter: {
+                     lat: 48.88,
+                     lng: 2.34
+                   },
+                   zoom: 10
+    };
     this.loadFlats();
-    console.log(this.state.flats);
+    // console.log(this.state.flats);
   }
 
   loadFlats = () => {
@@ -28,6 +35,18 @@ class App extends Component {
     this.state.flats = flatArr;
   }
 
+  // zoomOnMapCenter = (lat, lng, zoom) => {
+  zoomOnMapCenter = (lat, lng, zoom) => {
+    this.setState({
+      mapCenter: {
+        // lat: 48.88,
+        // lng: 2.34
+        lat: lat,
+        lng: lng
+      }});
+    this.setState({ zoom: zoom });
+  }
+
   render() {
 
     // let imgUrl = "https://raw.githubusercontent.com/lewagon/flats-boilerplate/master/images/flat1.jpg";
@@ -36,14 +55,15 @@ class App extends Component {
     // let lat = 48.884211;
     // let lng = 2.34689;
 
+    // this.zoomOnMapCenter(40,2,14);
 
     return (
       <div>
-        <div className="flat-list" >
-          <FlatList flats={this.state.flats}/>
-          {/*<Flat imgUrl={imgUrl} priceStr={priceStr} desc={desc} lat={lat} lng={lng} />*/}
+        <FlatList flats={this.state.flats} zoomOnMapCenter={this.zoomOnMapCenter}/>
+        {/*<Flat imgUrl={imgUrl} priceStr={priceStr} desc={desc} lat={lat} lng={lng} />*/}
+        <div className="map-container">
+          <SimpleMap center={this.state.mapCenter} zoom={this.state.zoom} />
         </div>
-        <div className="map-container"></div>
       </div>
     );
   }
